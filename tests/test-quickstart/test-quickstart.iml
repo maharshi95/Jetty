@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="jetty-quickstart" />
+    <orderEntry type="module" module-name="jetty-webapp" />
+    <orderEntry type="module" module-name="jetty-xml" />
+    <orderEntry type="module" module-name="jetty-servlet" />
+    <orderEntry type="module" module-name="jetty-security" />
+    <orderEntry type="module" module-name="jetty-jmx" />
+    <orderEntry type="module" module-name="jetty-util" />
+    <orderEntry type="module" module-name="jetty-plus" />
+    <orderEntry type="module" module-name="jetty-jndi" />
+    <orderEntry type="module" module-name="jetty-annotations" />
+    <orderEntry type="library" name="Maven: javax.annotation:javax.annotation-api:1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm-commons:5.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm-tree:5.0.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.transaction:javax.transaction-api:1.2" level="project" />
+    <orderEntry type="module" module-name="test-mock-resources" />
+    <orderEntry type="library" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.orbit:javax.mail.glassfish:1.4.1.v201005082020" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.jetty.orbit:javax.activation:1.1.0.v201105071233" level="project" />
+    <orderEntry type="module" module-name="jetty-servlets" />
+    <orderEntry type="module" module-name="jetty-continuation" />
+    <orderEntry type="module" module-name="jetty-http" />
+    <orderEntry type="module" module-name="jetty-io" />
+    <orderEntry type="module" module-name="test-jndi-webapp" />
+    <orderEntry type="module" module-name="test-spec-webapp" />
+    <orderEntry type="module" module-name="test-jetty-webapp" />
+    <orderEntry type="module" module-name="javax-websocket-server-impl" />
+    <orderEntry type="module" module-name="javax-websocket-client-impl" />
+    <orderEntry type="library" name="Maven: javax.websocket:javax.websocket-api:1.0" level="project" />
+    <orderEntry type="module" module-name="websocket-server" />
+    <orderEntry type="module" module-name="websocket-common" />
+    <orderEntry type="module" module-name="websocket-api" />
+    <orderEntry type="module" module-name="websocket-client" />
+    <orderEntry type="module" module-name="websocket-servlet" />
+    <orderEntry type="module" module-name="apache-jsp" />
+    <orderEntry type="module" module-name="jetty-server" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.toolchain:jetty-schemas:3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.mortbay.jasper:apache-jsp:8.0.33" level="project" />
+    <orderEntry type="library" name="Maven: org.mortbay.jasper:apache-el:8.0.33" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jdt.core.compiler:ecj:4.4.2" level="project" />
+    <orderEntry type="module" module-name="apache-jstl" />
+    <orderEntry type="library" name="Maven: org.apache.taglibs:taglibs-standard-spec:1.2.5" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.taglibs:taglibs-standard-impl:1.2.5" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.toolchain:jetty-test-helper:3.1" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.12" level="project" />
+    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-library:1.3" level="project" />
+  </component>
+</module>

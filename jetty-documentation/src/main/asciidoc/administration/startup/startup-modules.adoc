@@ -1,0 +1,170 @@
+//  ========================================================================
+//  Copyright (c) 1995-2016 Mort Bay Consulting Pty. Ltd.
+//  ========================================================================
+//  All rights reserved. This program and the accompanying materials
+//  are made available under the terms of the Eclipse Public License v1.0
+//  and Apache License v2.0 which accompanies this distribution.
+//
+//      The Eclipse Public License is available at
+//      http://www.eclipse.org/legal/epl-v10.html
+//
+//      The Apache License v2.0 is available at
+//      http://www.opensource.org/licenses/apache2.0.php
+//
+//  You may elect to redistribute this code under either of these licenses.
+//  ========================================================================
+
+[[startup-modules]]
+=== Managing Startup Modules
+
+Starting with Jetty 9.1, a new Module system was introduced, replacing the previous `start.config` + `OPTIONS` techniques from past Jetty Distributions.
+
+The standard Jetty Distribution ships with several modules defined in `${jetty.home}/modules/`.
+
+What a Jetty Startup Module Defines:
+
+A Module Name::
+  The name of the module is the keyword used by the `--module=<name>` command line argument to activate/enable modules, and also find dependent modules.
+  The filename of the module defines its name (eg: server.mod becomes the module named "server").
+List of Dependant Modules::
+  All modules can declare that they depend on other modules with the `[depend]` section.
+  The list of dependencies is used to transitively resolve other modules that are deemed to be required based on the modules that you activate.
+  The order of modules defined in the graph of active modules is used to determine various execution order for configuration, such as Jetty IoC XML configurations, and to resolve conflicting property declarations.
+  Of note: there is a special section `[optional]` used to describe structurally dependent modules that are not technically required, but might be of use to your specific configuration.
+List of Libraries::
+  Module can optionally declare that they have libraries that they need to function properly.
+  The `[lib]` section declares a set of pathnames that follow the link:#base-vs-home-resolution[Jetty Base and Jetty Home path resolution rules].
+List of Jetty IoC XML Configurations::
+  A Module can optionally declare a list of Jetty IoC XML configurations used to wire up the functionality that this module defines.
+  The `[xml]` section declares a set of pathnames that follow the link:#base-vs-home-resolution[Jetty Base and Jetty Home path resolution rules].
+  Ideally, all XML files are parameterized to accept properties to configure the various elements of the standard configuration.
+  Allowing for a simplified configuration of Jetty for the vast majority of deployments.
+  The execution order of the Jetty IoC XML configurations is determined by the graph of active module dependencies resolved via the `[depend]` sections.
+  If the default XML is not sufficient to satisfy your needs, you can override this XML by making your own in the `${jetty.base}/etc/` directory, with the same name.
+  The resolution steps for Jetty Base and Jetty Home will ensure that your copy from `${jetty.base}` will be picked up over the default one in `${jetty.home}`.
+Jetty INI Template::
+  Each module can optionally declare a startup ini template that is used to insert/append/inject sample configuration elements into the `start.ini` or `start.d/*.ini` files when using the `--add-to-start=<name>` or `--add-to-startd=<name>` command line arguments in `start.jar`.
+  Commonly used to present some of the parameterized property options from the Jetty IoC XML configuration files also referenced in the same module.
+  The `[ini-template]` section declares this section of sample configuration.
+Required Files and Directories::
+  If the activation of a module requires some paths to exist, the `[files]` section defines them.
+  There are 2 modes of operation of the entries in this section.
+Ensure Directory Exists;;
+    If you add a pathname that ends in `"/"` (slash), such as `"webapps/"`, then that directory will be created if it does not yet exist in `${jetty.base}/<pathname>` (eg: `"webapps/"` will result in `${jetty.base}/webapps/` being created).
+Download File;;
+    There is a special syntax to allow you to download a file into a specific location if it doesn't exist yet: `<url>:<pathname>`.
+    Currently, the `<url>` must be a `http://` scheme URL (please link:#bugs[let us know] if you need more schemes supported).
+    The `<pathname>` portion follows the link:#base-vs-home-resolution[Jetty Base and Jetty Home path resolution rules].
+    Example: `http://repo.corp.com/maven/corp-security-policy-1.0.jar:lib/corp-security-policy.jar`
+    This will check for the existence of `lib/corp-security-policy.jar`, and if it doesn't exist, it will download the jar file from
+    `http://repo.corp.com/maven/corp-security-policy-1.0.jar`
+
+[[enabling-modules]]
+==== Enabling Modules
+
+Jetty ships with many modules defined, and a small subset predefined in the `start.ini` found in the jetty distribution.
+
+____
+[TIP]
+The default distribution has a co-mingled `${jetty.home}` and `${jetty.base}`. Where the directories for `${jetty.home}` and `${jetty.base}` point to the same location.
+It is highly encouraged that you learn about the differences in link:#startup-base-and-home[Jetty Base vs Jetty Home] and take full advantage of this setup.
+____
+
+When you want enable a module, you can use the `--module=<modulename>` syntax on the command line to enable that module and all of its dependent modules.
+
+An example of this, with a new, empty, base directory.
+We can see from this output, that the directory is new.
+
+include::screen-empty-base.adoc[]
+
+Lets see what the configuration looks like so far:
+
+include::screen-empty-base-listconfig.adoc[]
+
+Lets try adding some basic support for webapps, with automatic deploy (hot deploy), and a single basic HTTP/1.1 connector.
+
+include::screen-http-webapp-deploy.adoc[]
+
+This created the webapps directory in our `mybase` directory and appended the `start.ini` file with the ini template arguments from the associated module files.
+Additionally, where needed, Jetty enabled any module dependencies and added their module ini template properties.
+
+Lets see what it looks like configuration wise.
+
+include::screen-http-webapp-deploy-listconfig.adoc[]
+
+You now have a configured and functional server, albeit with no webapps deployed.
+At this point you can place a webapp (war file) in the `mybase/webapps/` directory and and start Jetty.
+
+[[startup-configuring-modules]]
+
+==== Configuring Modules
+
+Once a module has been enabled for the server, it can be further configured to meet your needs.
+This is done by editing the associated ini file for the module.
+If your server setup is using a centralized ini configuration, you will edit the `{$jetty.base}/server.ini` file.
+If you have elected to manage each module within it's own ini file, you can find these files in the `{$jetty.base}/start.d` directory.
+
+When a module is activated, a number of properties are set by default.
+To view these defaults, open up the associated ini file.
+Listed in the ini file is the associated module file and any properties that can be set.
+
+Below is an example of the `requestlog.ini` file:
+
+[source, screen, subs="{sub-order}"]
+....
+# ---------------------------------------
+# Module: requestlog
+--module=requestlog
+
+## Logging directory (relative to $jetty.base)
+# jetty.requestlog.dir=logs
+
+## File path
+# jetty.requestlog.filePath=${jetty.requestlog.dir}/yyyy_mm_dd.request.log
+
+## Date format for rollovered files (uses SimpleDateFormat syntax)
+# jetty.requestlog.filenameDateFormat=yyyy_MM_dd
+
+## How many days to retain old log files
+# jetty.requestlog.retainDays=90
+
+## Whether to append to existing file
+# jetty.requestlog.append=true
+
+## Whether to use the extended log output
+# jetty.requestlog.extended=true
+
+## Whether to log http cookie information
+# jetty.requestlog.cookies=true
+
+## Timezone of the log entries
+# jetty.requestlog.timezone=GMT
+
+## Whether to log LogLatency
+# jetty.requestlog.loglatency=false
+....
+
+The first lines name the module file being called (located in `{$jetty.home/modules}`).
+Subsequent lines list properties that can be changed as well as a description for each property.
+To edit a property, first un-comment the line by deleting the `#` at the start of the line, then make the change after `=` sign (such as changing a `true` value to `false`).
+
+[[startup-disable-module]]
+==== Disabling Modules
+
+Disabling a module is an easy process.
+To disable a module, comment out the `--module=` line in the associated ini file.
+Deleting the ini file associated with module is another option, but may not be practical in all situations.
+
+[[startup-listing-modules]]
+==== Listing Available and Active Modules
+
+To see which modules are __available__, use the `--list-modules` command line argument.
+This command will also show you which modules are __enabled__.
+Here's an example:
+
+include::screen-list-modules.adoc[]
+
+Since being introduced in Jetty 9.1 the modules provided in the Jetty distribution has expanded greatly.
+Below is a graphical representation of the standard modules and their dependencies.
+
+image:images/modules-9.3-simplified.png[image,width=768]
